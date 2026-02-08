@@ -3,6 +3,7 @@ Bridging Medical Deserts - Main Streamlit Application
 
 Purpose: Web interface for NGO planners to explore Ghana healthcare facilities
 Author: MIT Hackathon Team
+Updated: February 7, 2026
 """
 
 import streamlit as st
