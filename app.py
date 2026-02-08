@@ -371,8 +371,8 @@ def main():
             # Show capabilities
             col1, col2, col3 = st.columns(3)
             with col1:
-                if getattr(agent, "has_anthropic", False):
-                    st.success("🧠 **LLM**\nClaude enabled")
+                if getattr(agent, "has_openai", False):
+                    st.success("🧠 **LLM**\nOpenAI enabled")
                 else:
                     st.warning("🧠 **LLM**\nPattern-only mode")
             with col2:
@@ -523,7 +523,7 @@ def main():
             **Setup Required:**
             1. Install dependencies: `pip install -r requirements.txt`
             2. Build FAISS index: `python tools/build_faiss_index.py`
-            3. Set Anthropic key in `.env`: `ANTHROPIC_API_KEY=your-key`
+            3. Set OpenAI key in `.env`: `OPENAI_API_KEY=your-key`
             4. Restart Streamlit
             
             **Current Status:**
@@ -533,7 +533,7 @@ def main():
             """.format(
                 "✅" if Path('data/healthcare.duckdb').exists() else "❌",
                 "✅" if Path('data/faiss_index.bin').exists() else "❌ (run build_faiss_index.py)",
-                "✅" if os.getenv('ANTHROPIC_API_KEY') else "❌ (add to .env)"
+                "✅" if os.getenv('OPENAI_API_KEY') else "❌ (add to .env)"
             ))
 
     with tab6:

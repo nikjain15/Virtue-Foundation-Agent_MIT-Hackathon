@@ -4,7 +4,7 @@ streamlit-folium
 folium
 duckdb
 faiss-cpu
-anthropic
+openai
 pandas
 openpyxl
 plotly

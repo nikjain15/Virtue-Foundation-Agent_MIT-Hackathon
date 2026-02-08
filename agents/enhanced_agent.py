@@ -18,7 +18,7 @@ import plotly.express as px
 from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
-import anthropic
+import openai
 
 try:
     from agents.gap_analyzer_agent import GapAnalyzerAgent
@@ -36,20 +36,20 @@ class EnhancedAgent:
         self.db_path = db_path
         self.conn = duckdb.connect(db_path, read_only=True)
         
-        # Initialize Anthropic (if available)
-        self.anthropic_client = None
-        self.has_anthropic = False
-        api_key = os.getenv('ANTHROPIC_API_KEY')
+        # Initialize OpenAI (if available)
+        self.openai_client = None
+        self.has_openai = False
+        api_key = os.getenv('OPENAI_API_KEY')
         if api_key:
             try:
-                self.anthropic_client = anthropic.Anthropic(api_key=api_key)
-                self.has_anthropic = True
-                print("✅ Anthropic Claude available")
+                self.openai_client = openai.OpenAI(api_key=api_key)
+                self.has_openai = True
+                print("✅ OpenAI GPT-4 available")
             except Exception as e:
-                print(f"⚠️  Anthropic not available: {e}")
+                print(f"⚠️  OpenAI not available: {e}")
                 print("📌 Using pattern matching fallback")
         else:
-            print("📌 No Anthropic API key, using pattern matching")
+            print("📌 No OpenAI API key, using pattern matching")
 
         # Initialize multi-agents (gap + planning)
         self.gap_agent = None
@@ -79,7 +79,7 @@ class EnhancedAgent:
         else:
             print("📌 FAISS index not found, run: python tools/build_faiss_index.py")
         
-        print(f"🚀 Enhanced Agent ready (AI: {self.has_anthropic}, FAISS: {self.has_faiss})")
+        print(f"🚀 Enhanced Agent ready (AI: {self.has_openai}, FAISS: {self.has_faiss})")
     
     def handle_query(self, question: str) -> Dict[str, Any]:
         """
@@ -147,7 +147,7 @@ class EnhancedAgent:
         """Answer facility queries - AI-powered or pattern-based"""
         
         # Try AI-generated SQL first
-        if self.has_anthropic:
+        if self.has_openai:
             try:
                 sql_query = self._generate_sql_with_ai(question)
                 results = self._execute_query(sql_query)
@@ -186,15 +186,17 @@ Requirements:
 
 SQL Query:"""
 
-        response = self.anthropic_client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            system="You are a SQL expert for healthcare databases.",
-            messages=[{"role": "user", "content": prompt}],
+        response = self.openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a SQL expert for healthcare databases."},
+                {"role": "user", "content": prompt}
+            ],
             temperature=0.1,
             max_tokens=500
         )
         
-        sql = response.content[0].text.strip()
+        sql = response.choices[0].message.content.strip()
         # Clean up markdown code blocks if present
         sql = sql.replace('```sql', '').replace('```', '').strip()
         return sql
@@ -435,7 +437,7 @@ SQL Query:"""
                 'visualization': None
             }
         
-        if self.has_anthropic:
+        if self.has_openai:
             try:
                 plan = self._generate_ai_plan(question, gaps['data'], location, specialty)
             except:
@@ -471,15 +473,17 @@ Generate a comprehensive plan with:
 
 Format with clear sections and bullet points."""
 
-        response = self.anthropic_client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            system="You are a healthcare planning expert focused on reducing medical deserts.",
-            messages=[{"role": "user", "content": prompt}],
+        response = self.openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a healthcare planning expert focused on reducing medical deserts."},
+                {"role": "user", "content": prompt}
+            ],
             temperature=0.7,
             max_tokens=800
         )
         
-        return response.content[0].text
+        return response.choices[0].message.content
     
     def _generate_template_plan(self, location: str, specialty: str, gaps: Dict) -> str:
         """Template-based plan generation"""
