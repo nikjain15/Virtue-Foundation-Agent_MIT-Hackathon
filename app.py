@@ -32,6 +32,7 @@ st.set_page_config(
 # Title
 st.title("🏥 Bridging Medical Deserts - Ghana Healthcare")
 st.markdown("**Helping NGOs identify healthcare gaps and plan interventions**")
+st.caption("Version: Feb 7, 2026 | 987 Facilities | Multi-Agent AI System")
 st.markdown("---")
 
 # Database connection
@@ -200,14 +201,14 @@ def main():
     # Show filtered count
     st.sidebar.markdown(f"**Showing {len(filtered_df)} of {len(df)} facilities**")
     
-    # Main content area
+    # Main content area with 6 specialized tabs
     tab_chat, tab1, tab2, tab3, tab4, tab6 = st.tabs([
         "💬 AI Chat",
         "📊 Overview",
         "🗺️ Interactive Map",
         "📋 Data Table",
         "📈 Statistics",
-        "🤖 Multi-Agent"
+        "🤖 Multi-Agent Dashboard"
     ])
     
     with tab1:
