@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.db
+*.index
+venv/
+.venv/
+.DS_Store
+data/faiss_index.bin
+data/faiss_metadata.pkl
+data/facility_embeddings.pkl
+data/geocoding_cache.json
+geocoding_output.log

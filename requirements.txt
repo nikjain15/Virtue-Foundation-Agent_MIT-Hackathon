@@ -1,0 +1,15 @@
+google-adk
+streamlit
+streamlit-folium
+folium
+duckdb
+faiss-cpu
+anthropic
+pandas
+openpyxl
+plotly
+matplotlib
+sentence-transformers
+numpy
+tiktoken
+scikit-learn
